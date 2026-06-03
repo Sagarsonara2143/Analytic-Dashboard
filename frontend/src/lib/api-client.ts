@@ -1,8 +1,10 @@
 import axios, { AxiosError } from "axios";
 import { useAuthStore } from "@/store/auth-store";
 
+// Use relative URL — Next.js rewrites /api/* → http://backend:8004/api/*
+// This works both in Docker (container-to-container) and local dev
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: "/",
   headers: { "Content-Type": "application/json" },
 });
 
@@ -35,7 +37,7 @@ api.interceptors.response.use(
     isRefreshing = true;
     try {
       const refresh = useAuthStore.getState().refreshToken;
-      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/refresh`, {
+      const { data } = await axios.post("/api/v1/auth/refresh", {
         refresh_token: refresh,
       });
       useAuthStore.getState().setTokens(data.access_token, data.refresh_token);

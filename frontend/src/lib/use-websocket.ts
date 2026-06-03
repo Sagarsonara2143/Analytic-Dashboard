@@ -11,7 +11,9 @@ export function useOrgWebSocket(orgId: string, onMessage: MessageHandler) {
 
   const connect = useCallback(() => {
     if (!token || !orgId) return;
-    const url = `${process.env.NEXT_PUBLIC_WS_URL}/api/v1/ws/${orgId}?token=${token}`;
+    // WS connects directly to backend (bypasses Next.js rewrite)
+    const wsBase = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8004";
+    const url = `${wsBase}/api/v1/ws/${orgId}?token=${token}`;
     const ws = new WebSocket(url);
 
     ws.onmessage = (e) => {
