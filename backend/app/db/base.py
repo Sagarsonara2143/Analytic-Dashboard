@@ -1,0 +1,15 @@
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy.orm import DeclarativeBase, MappedColumn, mapped_column
+from sqlalchemy import DateTime, func
+from datetime import datetime
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
+
+from app.core.config import settings
+
+engine = create_async_engine(settings.DATABASE_URL, echo=False, pool_pre_ping=True)
+AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+
+
+class Base(DeclarativeBase):
+    pass
