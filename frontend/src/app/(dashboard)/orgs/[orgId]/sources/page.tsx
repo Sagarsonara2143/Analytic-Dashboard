@@ -17,7 +17,7 @@ export default function DataSourcesPage() {
   const qc = useQueryClient();
   const [formData, setFormData] = useState({
     name: "",
-    source_type: "api" as const,
+    source_type: "rest" as const,
     description: ""
   });
 
@@ -61,7 +61,7 @@ export default function DataSourcesPage() {
             value={formData.source_type}
             onChange={(e) => setFormData({ ...formData, source_type: e.target.value as any })}
           >
-            <option value="api">REST API</option>
+            <option value="rest">REST API</option>
             <option value="webhook">Webhook</option>
             <option value="csv">CSV Upload</option>
           </select>

@@ -19,7 +19,8 @@ async def create_api_key(db: AsyncSession, org_id: uuid.UUID, name: str) -> str:
     prefix = full_key[:12]
     api_key = ApiKey(org_id=org_id, name=name, key_hash=key_hash, prefix=prefix)
     db.add(api_key)
-    await db.flush()
+    await db.commit()
+    await db.refresh(api_key)
     return full_key  # shown only once
 
 
@@ -46,4 +47,5 @@ async def revoke_api_key(db: AsyncSession, key_id: uuid.UUID, org_id: uuid.UUID)
     if not key:
         return False
     key.is_active = False
+    await db.commit()
     return True

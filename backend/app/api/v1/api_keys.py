@@ -1,14 +1,13 @@
 import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete
+from sqlalchemy import select
 
 from app.db.session import get_session
-from app.core.deps import get_org_member, require_role
+from app.core.deps import require_role
 from app.models.org_member import Role
 from app.models.api_key import ApiKey
 from app.schemas.api_key import ApiKeyCreate, ApiKeyOut
-from app.core.security import generate_api_key
 
 router = APIRouter(prefix="/orgs/{org_id}/api-keys", tags=["api-keys"])
 
@@ -20,15 +19,9 @@ async def create_api_key(
     _member=Depends(require_role(Role.OWNER, Role.ADMIN)),
     db: AsyncSession = Depends(get_session),
 ):
-    key_value = generate_api_key()
-    api_key = ApiKey(
-        org_id=org_id,
-        name=body.name,
-        key_hash=key_value,  # In production, hash this
-    )
-    db.add(api_key)
-    await db.commit()
-    return {"id": str(api_key.id), "key": key_value}
+    from app.services.api_key_service import create_api_key as create_key
+    key_value = await create_key(db, org_id, body.name)
+    return {"id": "created", "key": key_value}
 
 
 @router.get("", response_model=list[ApiKeyOut])
@@ -37,13 +30,13 @@ async def list_api_keys(
     _member=Depends(require_role(Role.OWNER, Role.ADMIN)),
     db: AsyncSession = Depends(get_session),
 ):
-    result = await db.execute(select(ApiKey).where(ApiKey.org_id == org_id))
+    result = await db.execute(select(ApiKey).where(ApiKey.org_id == org_id, ApiKey.is_active == True))
     keys = result.scalars().all()
     return [
         ApiKeyOut(
             id=str(k.id),
             name=k.name,
-            key_preview=f"ak_...{k.key_hash[-4:]}",
+            key_preview=f"{k.prefix}...",
             created_at=k.created_at.isoformat(),
         )
         for k in keys
@@ -57,7 +50,7 @@ async def delete_api_key(
     _member=Depends(require_role(Role.OWNER, Role.ADMIN)),
     db: AsyncSession = Depends(get_session),
 ):
-    await db.execute(
-        delete(ApiKey).where(ApiKey.id == key_id, ApiKey.org_id == org_id)
-    )
-    await db.commit()
+    from app.services.api_key_service import revoke_api_key
+    success = await revoke_api_key(db, key_id, org_id)
+    if not success:
+        raise HTTPException(404, "API key not found")

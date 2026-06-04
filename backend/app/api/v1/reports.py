@@ -25,7 +25,8 @@ async def create_report(
 ):
     report = Report(org_id=org_id, created_by=current_user.id, **body.model_dump())
     db.add(report)
-    await db.flush()
+    await db.commit()
+    await db.refresh(report)
     return report
 
 

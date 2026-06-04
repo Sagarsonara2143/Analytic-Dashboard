@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
+from urllib.parse import quote_plus
 
 
 class Settings(BaseSettings):
@@ -11,7 +12,22 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
-    DATABASE_URL: str
+    # Database settings
+    DATABASE_URL: str | None = None
+    DB_HOST: str = "localhost"
+    DB_PORT: int = 5432
+    DB_USER: str = "postgres"
+    DB_PASSWORD: str = "Admin@2025"
+    DB_NAME: str = "analytics_db"
+    
+    @property
+    def database_url(self) -> str:
+        if self.DATABASE_URL:
+            return self.DATABASE_URL
+        # Build URL with proper encoding
+        password = quote_plus(self.DB_PASSWORD)
+        return f"postgresql+asyncpg://{self.DB_USER}:{password}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
     REDIS_URL: str
     CELERY_BROKER_URL: str
     CELERY_RESULT_BACKEND: str
@@ -23,7 +39,7 @@ class Settings(BaseSettings):
     SMTP_USE_TLS: bool = False
     EMAILS_FROM: str = "no-reply@analytics.local"
 
-    OTEL_EXPORTER_OTLP_ENDPOINT: str = "http://localhost:4317"
+    OTEL_EXPORTER_OTLP_ENDPOINT: str | None = None
     OTEL_SERVICE_NAME: str = "analytics-backend"
 
     API_KEY_PREFIX: str = "ak_"

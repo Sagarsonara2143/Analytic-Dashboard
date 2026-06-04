@@ -10,7 +10,8 @@ from app.schemas.alert import AlertCreate, AlertUpdate
 async def create_alert(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, data: AlertCreate) -> Alert:
     alert = Alert(org_id=org_id, created_by=user_id, **data.model_dump())
     db.add(alert)
-    await db.flush()
+    await db.commit()
+    await db.refresh(alert)
     return alert
 
 
@@ -29,16 +30,21 @@ async def list_alerts(db: AsyncSession, org_id: uuid.UUID) -> list[Alert]:
 async def update_alert(db: AsyncSession, alert: Alert, data: AlertUpdate) -> Alert:
     for field, value in data.model_dump(exclude_none=True).items():
         setattr(alert, field, value)
+    await db.commit()
+    await db.refresh(alert)
     return alert
 
 
 async def delete_alert(db: AsyncSession, alert: Alert) -> None:
     await db.delete(alert)
+    await db.commit()
 
 
 async def mute_alert(db: AsyncSession, alert: Alert, minutes: int) -> Alert:
     alert.status = AlertStatus.MUTED
     alert.muted_until = datetime.now(timezone.utc) + timedelta(minutes=minutes)
+    await db.commit()
+    await db.refresh(alert)
     return alert
 
 
@@ -50,5 +56,6 @@ async def record_alert_event(db: AsyncSession, alert_id: uuid.UUID, value: float
         message=message,
     )
     db.add(event)
-    await db.flush()
+    await db.commit()
+    await db.refresh(event)
     return event

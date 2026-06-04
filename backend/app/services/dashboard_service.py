@@ -11,8 +11,13 @@ async def create_dashboard(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UU
     dash = Dashboard(org_id=org_id, created_by=user_id, **data.model_dump())
     db.add(dash)
     await db.commit()
-    await db.refresh(dash)
-    return dash
+    # Reload with widgets using a fresh query
+    result = await db.execute(
+        select(Dashboard)
+        .options(selectinload(Dashboard.widgets))
+        .where(Dashboard.id == dash.id)
+    )
+    return result.scalar_one()
 
 
 async def get_dashboard(db: AsyncSession, dashboard_id: uuid.UUID, org_id: uuid.UUID) -> Dashboard | None:
@@ -26,7 +31,10 @@ async def get_dashboard(db: AsyncSession, dashboard_id: uuid.UUID, org_id: uuid.
 
 async def list_dashboards(db: AsyncSession, org_id: uuid.UUID) -> list[Dashboard]:
     result = await db.execute(
-        select(Dashboard).where(Dashboard.org_id == org_id).order_by(Dashboard.created_at.desc())
+        select(Dashboard)
+        .options(selectinload(Dashboard.widgets))
+        .where(Dashboard.org_id == org_id)
+        .order_by(Dashboard.created_at.desc())
     )
     return list(result.scalars().all())
 
@@ -35,8 +43,13 @@ async def update_dashboard(db: AsyncSession, dashboard: Dashboard, data: Dashboa
     for field, value in data.model_dump(exclude_none=True).items():
         setattr(dashboard, field, value)
     await db.commit()
-    await db.refresh(dashboard)
-    return dashboard
+    # Reload with widgets using a fresh query
+    result = await db.execute(
+        select(Dashboard)
+        .options(selectinload(Dashboard.widgets))
+        .where(Dashboard.id == dashboard.id)
+    )
+    return result.scalar_one()
 
 
 async def delete_dashboard(db: AsyncSession, dashboard: Dashboard) -> None:
@@ -49,6 +62,8 @@ async def generate_share_token(db: AsyncSession, dashboard: Dashboard) -> str:
     dashboard.share_token = token
     dashboard.is_public = True
     await db.commit()
+    # Reload with widgets to ensure proper serialization
+    await db.refresh(dashboard)
     return token
 
 

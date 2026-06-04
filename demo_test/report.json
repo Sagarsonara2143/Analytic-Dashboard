@@ -1,0 +1,90 @@
+{
+  "runAt": "2026-06-04T10:25:42.354Z",
+  "user": "demo_1780568667532@example.com",
+  "org": "Demo Analytics Corp",
+  "orgId": null,
+  "dashboardId": null,
+  "totalSeconds": "73.7",
+  "passed": 6,
+  "failed": 6,
+  "results": [
+    {
+      "id": "01",
+      "label": "Authentication",
+      "status": "PASS",
+      "elapsed": "34.6"
+    },
+    {
+      "id": "02",
+      "label": "Organizations",
+      "status": "FAIL",
+      "elapsed": "20.0",
+      "error": "page.waitForURL: Timeout 12000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/dashboards\" until \"load\"\n============================================================"
+    },
+    {
+      "id": "03",
+      "label": "Dashboards & Widgets",
+      "status": "FAIL",
+      "elapsed": "0.0",
+      "error": "ORG_ID missing"
+    },
+    {
+      "id": "04",
+      "label": "Alerts",
+      "status": "FAIL",
+      "elapsed": "0.0",
+      "error": "ORG_ID missing"
+    },
+    {
+      "id": "05",
+      "label": "API Keys",
+      "status": "FAIL",
+      "elapsed": "0.0",
+      "error": "ORG_ID missing"
+    },
+    {
+      "id": "06",
+      "label": "Data Sources",
+      "status": "FAIL",
+      "elapsed": "0.0",
+      "error": "ORG_ID missing"
+    },
+    {
+      "id": "07",
+      "label": "Data Ingestion",
+      "status": "PASS",
+      "elapsed": "5.7"
+    },
+    {
+      "id": "08",
+      "label": "Reports",
+      "status": "PASS",
+      "elapsed": "0.0"
+    },
+    {
+      "id": "09",
+      "label": "WebSocket Real-Time",
+      "status": "PASS",
+      "elapsed": "0.0"
+    },
+    {
+      "id": "10",
+      "label": "Members & RBAC",
+      "status": "FAIL",
+      "elapsed": "0.0",
+      "error": "ORG_ID missing"
+    },
+    {
+      "id": "11",
+      "label": "Dashboard Sharing",
+      "status": "PASS",
+      "elapsed": "0.0"
+    },
+    {
+      "id": "12",
+      "label": "Token Refresh",
+      "status": "PASS",
+      "elapsed": "12.9"
+    }
+  ]
+}

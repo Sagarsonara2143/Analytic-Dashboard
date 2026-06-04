@@ -26,7 +26,8 @@ async def create_source(
 ):
     source = DataSource(org_id=org_id, **body.model_dump())
     db.add(source)
-    await db.flush()
+    await db.commit()
+    await db.refresh(source)
     return source
 
 

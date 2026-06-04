@@ -25,9 +25,11 @@ class EventOut(BaseModel):
     timestamp: int
 
 
+from app.models.data_source import SourceType
+
 class DataSourceCreate(BaseModel):
     name: str
-    source_type: str
+    source_type: SourceType
     schema_definition: dict[str, Any] = {}
 
 

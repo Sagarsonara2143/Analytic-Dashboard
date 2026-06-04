@@ -1,0 +1,26 @@
+{
+  "name": "analytics-dashboard-demo",
+  "version": "2.0.0",
+  "description": "Full automated browser demo for Analytics & Dashboard Platform",
+  "main": "demo.js",
+  "scripts": {
+    "demo":        "node demo.js",
+    "demo:auth":   "node demo.js 1",
+    "demo:orgs":   "node demo.js 2",
+    "demo:dash":   "node demo.js 3",
+    "demo:alerts": "node demo.js 4",
+    "demo:keys":   "node demo.js 5",
+    "demo:sources":"node demo.js 6",
+    "demo:ingest": "node demo.js 7",
+    "demo:reports":"node demo.js 8",
+    "demo:ws":     "node demo.js 9",
+    "demo:rbac":   "node demo.js 10",
+    "demo:share":  "node demo.js 11",
+    "demo:refresh":"node demo.js 12",
+    "demo:core":   "node demo.js 1 6",
+    "setup":       "npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}
