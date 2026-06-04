@@ -80,7 +80,10 @@ services:
     command: celery -A app.tasks.celery_app flower --port=5555
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        INTERNAL_API_URL: http://backend:8004
     ports:
       - "3004:3004"
     environment:

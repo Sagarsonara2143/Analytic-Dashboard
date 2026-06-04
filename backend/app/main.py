@@ -1,25 +1,15 @@
-from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api.v1 import api_router
 from app.core.config import settings
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup: setup telemetry
-    from app.core.telemetry import setup_telemetry
-    setup_telemetry(app)
-    yield
-    # Shutdown: cleanup if needed
+from app.core.telemetry import setup_telemetry
 
 
 app = FastAPI(
     title="Analytics Platform API",
     version="1.0.0",
-    lifespan=lifespan,
     docs_url="/api/docs",
     redoc_url="/api/redoc",
 )
@@ -34,6 +24,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+setup_telemetry(app)
 
 
 @app.exception_handler(Exception)

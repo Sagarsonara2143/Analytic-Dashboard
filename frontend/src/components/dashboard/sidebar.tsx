@@ -31,7 +31,7 @@ export function Sidebar() {
         <span className="font-bold text-sm">Analytics</span>
       </div>
       <nav className="flex-1 p-3 space-y-1">
-        {navItems(orgId).map(({ href, label, icon: Icon }) => (
+        {orgId && navItems(orgId).map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
             href={href}
