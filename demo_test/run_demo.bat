@@ -9,9 +9,9 @@ echo  ╚═══════════════════════�
 echo.
 
 :: Check frontend
-curl -s --max-time 3 http://localhost:3000 >nul 2>&1
+curl -s --max-time 3 http://localhost:3004 >nul 2>&1
 if errorlevel 1 (
-    echo  ❌  Frontend not running at http://localhost:3000
+    echo  ❌  Frontend not running at http://localhost:3004
     echo.
     echo  Start the app first:
     echo     docker compose up --build
@@ -20,9 +20,9 @@ if errorlevel 1 (
 )
 
 :: Check backend
-curl -s --max-time 3 http://localhost:8000/api/docs >nul 2>&1
+curl -s --max-time 3 http://localhost:8004/api/docs >nul 2>&1
 if errorlevel 1 (
-    echo  ❌  Backend not running at http://localhost:8000
+    echo  ❌  Backend not running at http://localhost:8004
     echo.
     echo  Start the app first:
     echo     docker compose up --build

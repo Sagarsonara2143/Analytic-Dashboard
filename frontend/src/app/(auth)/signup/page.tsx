@@ -30,6 +30,8 @@ export default function SignupPage() {
     try {
       const res = await api.post("/api/v1/auth/signup", data);
       setTokens(res.data.access_token, res.data.refresh_token);
+      document.cookie = `auth=${res.data.access_token}; path=/; max-age=${7 * 24 * 60 * 60}`;
+      document.cookie = `refresh=${res.data.refresh_token}; path=/; max-age=${7 * 24 * 60 * 60}`;
       router.push("/orgs");
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;

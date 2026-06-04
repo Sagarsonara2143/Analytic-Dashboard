@@ -29,6 +29,8 @@ export default function LoginPage() {
     try {
       const res = await api.post("/api/v1/auth/signin", data);
       setTokens(res.data.access_token, res.data.refresh_token);
+      document.cookie = `auth=${res.data.access_token}; path=/; max-age=${7 * 24 * 60 * 60}`;
+      document.cookie = `refresh=${res.data.refresh_token}; path=/; max-age=${7 * 24 * 60 * 60}`;
       router.push("/orgs");
     } catch {
       setError("root", { message: "Invalid email or password" });

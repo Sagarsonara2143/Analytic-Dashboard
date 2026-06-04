@@ -23,6 +23,8 @@ export function Sidebar() {
 
   const handleLogout = () => {
     logout();
+    document.cookie = 'auth=; path=/; max-age=0';
+    document.cookie = 'refresh=; path=/; max-age=0';
     router.push("/login");
   };
 

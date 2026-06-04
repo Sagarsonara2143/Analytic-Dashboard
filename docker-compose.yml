@@ -9,7 +9,7 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: Admin@2025
       POSTGRES_DB: analytics_db
     volumes:
       - postgres_data:/var/lib/postgresql/data

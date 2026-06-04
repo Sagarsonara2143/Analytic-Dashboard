@@ -78,7 +78,7 @@ function writeBugLog(results) {
 
 // ── Shared state passed between scenarios ─────────────────────────────────────
 const state = {
-  BASE_URL: 'http://localhost:3000',
+  BASE_URL: 'http://localhost:3004',
   USER: {
     full_name: 'Demo User',
     email:     `demo_${Date.now()}@example.com`,

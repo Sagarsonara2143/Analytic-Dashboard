@@ -14,7 +14,7 @@ async function run(page, state) {
   await sleep(PAUSE.NORMAL);
 
   const tokens = await page.evaluate(() => {
-    const raw = localStorage.getItem('auth-storage');
+    const raw = localStorage.getItem('auth');
     if (!raw) return null;
     try { return JSON.parse(raw); } catch { return null; }
   });
@@ -32,12 +32,12 @@ async function run(page, state) {
   // ── Step 2: Manually expire the access token ─────────────────────────────
   log(S, 2, 'Simulate expired access token by replacing it with an invalid value');
   await page.evaluate(() => {
-    const raw = localStorage.getItem('auth-storage');
+    const raw = localStorage.getItem('auth');
     if (!raw) return;
     const parsed = JSON.parse(raw);
     if (parsed?.state) {
       parsed.state.accessToken = 'expired.token.invalid';
-      localStorage.setItem('auth-storage', JSON.stringify(parsed));
+      localStorage.setItem('auth', JSON.stringify(parsed));
     }
   });
   logOk('Access token replaced with expired value');
@@ -49,7 +49,7 @@ async function run(page, state) {
   await sleep(PAUSE.LONG);
 
   const freshToken = await page.evaluate(() => {
-    const raw = localStorage.getItem('auth-storage');
+    const raw = localStorage.getItem('auth');
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     return parsed?.state?.accessToken || null;

@@ -7,7 +7,7 @@ import api from "@/lib/api-client";
 interface DataSource {
   id: string;
   name: string;
-  source_type: "api" | "webhook" | "csv";
+  source_type: "rest" | "webhook" | "csv";
   config: Record<string, unknown>;
   created_at: string;
 }
@@ -17,7 +17,7 @@ export default function DataSourcesPage() {
   const qc = useQueryClient();
   const [formData, setFormData] = useState({
     name: "",
-    source_type: "rest" as const,
+  source_type: "rest" as DataSource["source_type"],
     description: ""
   });
 
@@ -31,7 +31,7 @@ export default function DataSourcesPage() {
       api.post(`/api/v1/orgs/${orgId}/sources`, data).then(r => r.data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["sources", orgId] });
-      setFormData({ name: "", source_type: "api", description: "" });
+      setFormData({ name: "", source_type: "rest", description: "" });
     }
   });
 

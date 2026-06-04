@@ -16,7 +16,9 @@ def check_all_alerts():
 async def _check_alerts():
     async with AsyncSessionLocal() as db:
         result = await db.execute(
-            select(Alert).where(Alert.status.in_([AlertStatus.ACTIVE, AlertStatus.TRIGGERED]))
+            select(Alert).where(Alert.status.in_([
+                AlertStatus.ACTIVE, AlertStatus.TRIGGERED, AlertStatus.MUTED
+            ]))
         )
         alerts = result.scalars().all()
         now = datetime.now(timezone.utc)
