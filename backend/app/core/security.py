@@ -3,8 +3,13 @@ from typing import Any
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from app.core.config import settings
+import secrets
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+def generate_api_key() -> str:
+    return f"{settings.API_KEY_PREFIX}{secrets.token_urlsafe(32)}"
 
 
 def hash_password(password: str) -> str:

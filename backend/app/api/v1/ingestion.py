@@ -40,6 +40,20 @@ async def list_sources(
     return list(result.scalars().all())
 
 
+@router.delete("/orgs/{org_id}/sources/{source_id}", status_code=204)
+async def delete_source(
+    org_id: uuid.UUID,
+    source_id: uuid.UUID,
+    _member=Depends(get_org_member),
+    db: AsyncSession = Depends(get_session),
+):
+    from sqlalchemy import delete
+    await db.execute(
+        delete(DataSource).where(DataSource.id == source_id, DataSource.org_id == org_id)
+    )
+    await db.commit()
+
+
 # --- REST Ingestion (API Key auth) ---
 @router.post("/ingest/events")
 async def ingest_events(

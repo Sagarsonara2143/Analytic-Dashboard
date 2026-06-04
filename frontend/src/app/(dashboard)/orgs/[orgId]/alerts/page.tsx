@@ -1,6 +1,7 @@
 "use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import api from "@/lib/api-client";
 import type { Alert } from "@/types";
 
@@ -33,7 +34,15 @@ export default function AlertsPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Alerts</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Alerts</h1>
+        <Link
+          href={`/orgs/${orgId}/alerts/new`}
+          className="bg-primary text-primary-foreground px-4 py-2 rounded text-sm font-medium hover:opacity-90"
+        >
+          + New Alert
+        </Link>
+      </div>
       <div className="space-y-3">
         {alerts?.map((alert) => (
           <div key={alert.id} className="bg-card border rounded-lg p-4 flex items-center justify-between">

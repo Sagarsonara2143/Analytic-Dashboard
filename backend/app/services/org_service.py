@@ -11,7 +11,8 @@ async def create_org(db: AsyncSession, name: str, slug: str, owner_id: uuid.UUID
     await db.flush()
     member = OrgMember(org_id=org.id, user_id=owner_id, role=Role.OWNER)
     db.add(member)
-    await db.flush()
+    await db.commit()
+    await db.refresh(org)
     return org
 
 
@@ -30,7 +31,8 @@ async def get_member(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID) ->
 async def add_member(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, role: Role) -> OrgMember:
     member = OrgMember(org_id=org_id, user_id=user_id, role=role)
     db.add(member)
-    await db.flush()
+    await db.commit()
+    await db.refresh(member)
     return member
 
 

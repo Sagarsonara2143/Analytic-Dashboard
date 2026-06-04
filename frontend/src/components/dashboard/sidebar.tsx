@@ -1,15 +1,17 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useParams } from "next/navigation";
-import { LayoutDashboard, Bell, FileText, LogOut, Zap } from "lucide-react";
+import { LayoutDashboard, Bell, FileText, LogOut, Zap, Key, Database } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const navItems = (orgId: string) => [
   { href: `/orgs/${orgId}/dashboards`, label: "Dashboards", icon: LayoutDashboard },
+  { href: `/orgs/${orgId}/sources`, label: "Data Sources", icon: Database },
   { href: `/orgs/${orgId}/alerts`, label: "Alerts", icon: Bell },
   { href: `/orgs/${orgId}/reports`, label: "Reports", icon: FileText },
+  { href: `/orgs/${orgId}/api-keys`, label: "API Keys", icon: Key },
 ];
 
 export function Sidebar() {

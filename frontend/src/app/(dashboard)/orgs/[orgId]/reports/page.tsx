@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import api from "@/lib/api-client";
 import type { Report } from "@/types";
-import { format } from "date-fns";
 
 export default function ReportsPage() {
   const { orgId } = useParams<{ orgId: string }>();
@@ -29,7 +28,7 @@ export default function ReportsPage() {
                 </p>
                 {report.next_run_at && (
                   <p className="text-xs text-muted-foreground mt-1">
-                    Next run: {format(new Date(report.next_run_at), "PPp")}
+                    Next run: {new Date(report.next_run_at).toLocaleString()}
                   </p>
                 )}
               </div>

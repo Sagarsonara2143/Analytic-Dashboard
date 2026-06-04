@@ -20,7 +20,17 @@ async def create_dashboard(
     _member=Depends(get_org_member),
     db: AsyncSession = Depends(get_session),
 ):
-    return await dashboard_service.create_dashboard(db, org_id, current_user.id, body)
+    try:
+        print(f"Creating dashboard for org {org_id}, user {current_user.id}")
+        print(f"Dashboard data: {body.model_dump()}")
+        result = await dashboard_service.create_dashboard(db, org_id, current_user.id, body)
+        print(f"Dashboard created: {result.id}")
+        return result
+    except Exception as e:
+        print(f"Error creating dashboard: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
 
 
 @router.get("", response_model=list[DashboardOut])

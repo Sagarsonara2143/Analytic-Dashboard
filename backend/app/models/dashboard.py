@@ -29,6 +29,7 @@ class Dashboard(TimestampMixin, Base):
     layout: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
 
     org: Mapped["Organization"] = relationship("Organization", back_populates="dashboards")
+    created_by_user: Mapped["User"] = relationship("User", foreign_keys=[created_by])
     widgets: Mapped[list["Widget"]] = relationship("Widget", back_populates="dashboard", cascade="all, delete-orphan")
 
 
