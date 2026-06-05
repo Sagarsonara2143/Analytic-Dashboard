@@ -41,7 +41,7 @@ services:
       - ./backend:/app
       - report_files:/tmp/reports
     command: >
-      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8004 --reload"
+      sh -c "sleep 5 && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8004 --reload"
 
   celery-worker:
     build: ./backend
