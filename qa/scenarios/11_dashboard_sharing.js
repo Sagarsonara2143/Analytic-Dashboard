@@ -66,9 +66,10 @@ async function run(page, state) {
   log(S, 4, 'Reload dashboard — confirm "Auto-refreshing every 30s" label');
   await page.reload();
   await sleep(PAUSE.LONG);
-  const autoRefreshLabel = await page.isVisible('span:has-text("Auto-refreshing")');
+  // Label text changed in UI redesign from "Auto-refreshing every Xs" to "🔄 Refreshing every Xs"
+  const autoRefreshLabel = await page.isVisible('span:has-text("Refreshing every")');
   autoRefreshLabel
-    ? logOk('"Auto-refreshing every 30s" label visible on dashboard')
+    ? logOk('"Refreshing every 30s" label visible on dashboard')
     : logInfo('Auto-refresh label not visible — check auto_refresh_seconds value');
   await shot(page, '11_04_auto_refresh_label');
 }

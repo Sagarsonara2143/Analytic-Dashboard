@@ -50,7 +50,7 @@ async function run(page, state) {
     const stepNum = 5 + i;
 
     log(S, stepNum, `Add ${w.type.toUpperCase()} widget: "${w.title}"`);
-    await page.click('button:has-text("+ Add Widget")');
+    await page.click('button:has-text("Add Widget")');
     await sleep(PAUSE.NORMAL);
     await shot(page, `03_0${stepNum}_widget_form_open`);
 
@@ -65,8 +65,8 @@ async function run(page, state) {
     logInfo(`Sample data preview shown for ${w.type}`);
     await shot(page, `03_0${stepNum}_${w.type}_widget_filled`);
 
-    // Submit
-    await page.click('button:has-text("Add Widget")');
+    // Submit (button text changed to "Create Widget" after UI update)
+    await page.click('button:has-text("Create Widget")');
     await sleep(PAUSE.LONG);
     logOk(`${w.type.toUpperCase()} widget added`);
     await shot(page, `03_0${stepNum}_${w.type}_widget_on_dashboard`);

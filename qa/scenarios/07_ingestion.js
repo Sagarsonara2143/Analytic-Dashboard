@@ -17,7 +17,7 @@ async function run(page, state) {
 
   // ── Step 1: Navigate to API docs to show available endpoints ─────────────
   log(S, 1, 'Open API Docs (Swagger UI) to view ingestion endpoints');
-  await page.goto('http://localhost:8000/api/docs#/ingestion');
+  await page.goto('http://localhost:8004/api/docs#/ingestion');
   await sleep(PAUSE.READ);
   await shot(page, '07_01_swagger_ingestion_endpoints');
 
@@ -64,12 +64,12 @@ async function run(page, state) {
   // ── Step 3: CSV upload ────────────────────────────────────────────────────
   log(S, 3, 'CSV Upload — POST /api/v1/orgs/{id}/ingest/csv');
   logInfo('Open API Docs to try CSV upload manually:');
-  logInfo(`  URL: http://localhost:8000/api/docs#/ingestion/ingest_csv_orgs__org_id__ingest_csv_post`);
+  logInfo(`  URL: http://localhost:8004/api/docs#/ingestion/ingest_csv_orgs__org_id__ingest_csv_post`);
   logInfo(`  org_id: ${orgId}`);
   logInfo(`  source_id: ${sourceId}`);
   logInfo('  Upload a CSV with columns: metric, value');
 
-  await page.goto('http://localhost:8000/api/docs');
+  await page.goto('http://localhost:8004/api/docs');
   await sleep(PAUSE.NORMAL);
 
   // Expand the ingestion section
@@ -83,7 +83,7 @@ async function run(page, state) {
 
   // ── Step 4: Webhook ingest ────────────────────────────────────────────────
   log(S, 4, 'Webhook ingest — POST /api/v1/ingest/webhook/{source_id}');
-  logInfo(`Webhook URL: http://localhost:8000/api/v1/ingest/webhook/${sourceId}`);
+  logInfo(`Webhook URL: http://localhost:8004/api/v1/ingest/webhook/${sourceId}`);
 
   const webhookResult = await page.evaluate(async ({ sourceId }) => {
     try {

@@ -91,7 +91,7 @@ async function run(page, state) {
 
   // ── Step 6: Open second browser context to show multi-client WS ──────────
   log(S, 6, 'Open API docs WS endpoint description');
-  await page.goto(`http://localhost:8000/api/docs#/realtime`);
+  await page.goto(`http://localhost:8004/api/docs#/realtime`);
   await sleep(PAUSE.NORMAL);
   logInfo('WS endpoint: ws://localhost:8000/api/v1/ws/{org_id}?token=<access_token>');
   logInfo('Clients authenticate with JWT access token as query param');

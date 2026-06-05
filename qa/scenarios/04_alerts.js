@@ -67,15 +67,17 @@ async function run(page, state) {
 
   // ── Step 6: Mute first alert for 1 hour ──────────────────────────────────
   log(S, 6, 'Mute first alert for 1 hour');
-  await highlight(page, 'button:has-text("Mute 1h")');
-  await page.click('button:has-text("Mute 1h")');
+  // Mute button is now an icon-only button with title attribute (UI redesign)
+  await highlight(page, 'button[title="Mute for 1 hour"]');
+  await page.click('button[title="Mute for 1 hour"]');
   await sleep(PAUSE.LONG);
   logOk('Alert muted — status changes to "muted" (yellow)');
   await shot(page, '04_06_alert_muted');
 
   // ── Step 7: Delete second alert ───────────────────────────────────────────
   log(S, 7, 'Delete second alert (Low Revenue Warning)');
-  const deleteButtons = await page.locator('button:has-text("Delete")').all();
+  // Delete button is now an icon-only button with title attribute (UI redesign)
+  const deleteButtons = await page.locator('button[title="Delete alert"]').all();
   if (deleteButtons.length >= 1) {
     await deleteButtons[deleteButtons.length - 1].click();
     await sleep(PAUSE.LONG);

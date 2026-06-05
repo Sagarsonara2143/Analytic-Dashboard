@@ -130,7 +130,7 @@ async function checkApp() {
   try {
     const http = require('http');
     return new Promise((resolve) => {
-      const req = http.get('http://localhost:3000', (res) => resolve(res.statusCode < 500));
+      const req = http.get('http://localhost:3004', (res) => resolve(res.statusCode < 500));
       req.on('error', () => resolve(false));
       req.setTimeout(3000, () => { req.destroy(); resolve(false); });
     });
@@ -149,11 +149,11 @@ async function checkApp() {
   // Pre-flight check
   const appUp = await checkApp();
   if (!appUp) {
-    console.error('❌  Frontend not reachable at http://localhost:3000');
+    console.error('❌  Frontend not reachable at http://localhost:3004');
     console.error('   Start with: docker compose up --build');
     process.exit(1);
   }
-  console.log('✅  App is running at http://localhost:3000\n');
+  console.log('✅  App is running at http://localhost:3004\n');
 
   const browser = await chromium.launch({
     headless: false,

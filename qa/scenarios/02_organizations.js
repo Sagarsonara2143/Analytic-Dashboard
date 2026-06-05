@@ -19,7 +19,7 @@ async function run(page, state) {
 
   // ── Step 3: Fill name → watch slug auto-fill ─────────────────────────────
   log(S, 3, 'Type org name → watch slug auto-generate');
-  await fill(page, 'input[placeholder="Acme Corp"]', state.ORG.name, PAUSE.LONG);
+  await fill(page, 'input[placeholder="Acme Corporation"]', state.ORG.name, PAUSE.LONG);
   logInfo('Slug auto-generated from name');
   await shot(page, '02_03_org_name_filled_slug_generated');
 

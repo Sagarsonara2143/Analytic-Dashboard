@@ -48,7 +48,8 @@ async function run(page, state) {
 
   // ── Step 6: Delete the CSV source ────────────────────────────────────────
   log(S, 6, 'Delete "CSV Batch Upload" source');
-  const deleteButtons = await page.locator('button:has-text("Delete")').all();
+  // Delete button is now an icon-only button with title attribute (UI redesign)
+  const deleteButtons = await page.locator('button[title="Delete source"]').all();
   if (deleteButtons.length >= 1) {
     await deleteButtons[deleteButtons.length - 1].click();
     await sleep(PAUSE.LONG);

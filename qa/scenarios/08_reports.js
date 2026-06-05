@@ -89,7 +89,7 @@ async function run(page, state) {
   // ── Step 6: Open Swagger for manual PDF download test ────────────────────
   log(S, 6, 'Swagger UI — Download report PDF (once a run exists)');
   logInfo(`Endpoint: GET /api/v1/orgs/${orgId}/reports/{report_id}/runs/{run_id}/download`);
-  await page.goto(`http://localhost:8000/api/docs#/reports`);
+  await page.goto(`http://localhost:8004/api/docs#/reports`);
   await sleep(PAUSE.NORMAL);
   await shot(page, '08_06_swagger_reports');
 }

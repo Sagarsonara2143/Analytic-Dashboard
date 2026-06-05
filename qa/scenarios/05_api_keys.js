@@ -15,7 +15,8 @@ async function run(page, state) {
 
   // ── Step 2: Create first API key ─────────────────────────────────────────
   log(S, 2, 'Create API key: "Production Ingestion Key"');
-  await fill(page, 'input[placeholder="Key name"]', 'Production Ingestion Key');
+  // Placeholder changed in UI redesign from "Key name" to "Enter a name for this key"
+  await fill(page, 'input[placeholder="Enter a name for this key"]', 'Production Ingestion Key');
   await highlight(page, 'button:has-text("Create")');
   await shot(page, '05_02_api_key_name_filled');
 
@@ -24,14 +25,14 @@ async function run(page, state) {
   logOk('API key created with ak_... preview');
   await shot(page, '05_03_api_key_created');
 
-  // Capture key preview text for display
-  const keyText = await page.locator('p.font-mono').first().textContent().catch(() => 'ak_...');
+  // Capture key preview text — now rendered in <code> not <p> after UI redesign
+  const keyText = await page.locator('code.font-mono').first().textContent().catch(() => 'ak_...');
   logInfo(`Key preview shown: ${keyText}`);
   state.API_KEY_PREVIEW = keyText;
 
   // ── Step 3: Create second API key ────────────────────────────────────────
   log(S, 3, 'Create second API key: "Dev Testing Key"');
-  await fill(page, 'input[placeholder="Key name"]', 'Dev Testing Key');
+  await fill(page, 'input[placeholder="Enter a name for this key"]', 'Dev Testing Key');
   await page.click('button:has-text("Create")');
   await sleep(PAUSE.LONG);
   logOk('Second key created');
@@ -39,7 +40,8 @@ async function run(page, state) {
 
   // ── Step 4: Delete second API key ────────────────────────────────────────
   log(S, 4, 'Delete "Dev Testing Key"');
-  const deleteButtons = await page.locator('button:has-text("Delete")').all();
+  // Delete button is now an icon-only button with title attribute (UI redesign)
+  const deleteButtons = await page.locator('button[title="Delete key"]').all();
   if (deleteButtons.length >= 1) {
     await deleteButtons[deleteButtons.length - 1].click();
     await sleep(PAUSE.LONG);

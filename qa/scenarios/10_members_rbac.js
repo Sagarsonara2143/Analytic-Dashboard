@@ -87,7 +87,7 @@ async function run(page, state) {
 
   // ── Step 4: Show RBAC rules in API docs ───────────────────────────────────
   log(S, 4, 'Demonstrate RBAC via API docs');
-  await page.goto(`http://localhost:8000/api/docs`);
+  await page.goto(`http://localhost:8004/api/docs`);
   await sleep(PAUSE.NORMAL);
   logInfo('Key RBAC rules enforced at service layer:');
   logInfo('  POST /dashboards   → Owner, Admin, Analyst');
