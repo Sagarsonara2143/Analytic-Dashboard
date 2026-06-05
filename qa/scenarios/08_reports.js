@@ -8,10 +8,8 @@ async function run(page, state) {
   const orgId      = state.ORG_ID;
   const dashboardId = state.DASHBOARD_ID;
 
-  if (!dashboardId) {
-    logWarn('No dashboard ID — run 03_dashboards first.');
-    return;
-  }
+  if (!orgId) throw new Error('ORG_ID missing — run scenario 02 first');
+  if (!dashboardId) throw new Error('DASHBOARD_ID missing — run scenario 03 first');
 
   // ── Step 1: Navigate to Reports page ─────────────────────────────────────
   log(S, 1, 'Navigate to Reports page');

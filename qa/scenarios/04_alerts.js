@@ -1,21 +1,24 @@
 // scenarios/04_alerts.js
 // Covers: Create alert · List alerts · Mute alert · Delete alert
 
-const { PAUSE, log, logOk, logInfo, sleep, fill, shot, highlight } = require('../helpers');
+const { PAUSE, log, logOk, logInfo, sleep, banner, fill, shot, highlight } = require('../helpers');
 const S = '04_Alerts';
 
 async function run(page, state) {
   const orgId = state.ORG_ID;
+  if (!orgId) throw new Error('ORG_ID missing — run scenario 02 first');
 
   // ── Step 1: Navigate to Alerts ────────────────────────────────────────────
   log(S, 1, 'Navigate to Alerts page');
   await page.goto(`${state.BASE_URL}/orgs/${orgId}/alerts`);
   await sleep(PAUSE.NORMAL);
+  await banner(page, S, 1, 'Alerts page — no alerts yet');
   await shot(page, '04_01_alerts_empty');
 
   // ── Step 2: Open new alert form ───────────────────────────────────────────
-  log(S, 2, 'Click "+ New Alert"');
-  await page.click('a:has-text("+ New Alert")');
+  log(S, 2, 'Click "New Alert"');
+  // Link text changed in UI redesign — Plus icon replaces the "+" prefix
+  await page.click('a:has-text("New Alert")');
   await page.waitForURL('**/alerts/new', { timeout: 8000 });
   await sleep(PAUSE.NORMAL);
   await shot(page, '04_02_new_alert_form');
@@ -48,7 +51,7 @@ async function run(page, state) {
 
   // ── Step 5: Create second alert ───────────────────────────────────────────
   log(S, 5, 'Create second alert: Low Revenue (value < 500)');
-  await page.click('a:has-text("+ New Alert")');
+  await page.click('a:has-text("New Alert")');
   await page.waitForURL('**/alerts/new', { timeout: 8000 });
   await sleep(PAUSE.SHORT);
   await fill(page, 'input[type="text"]', 'Low Revenue Warning');
@@ -67,9 +70,10 @@ async function run(page, state) {
 
   // ── Step 6: Mute first alert for 1 hour ──────────────────────────────────
   log(S, 6, 'Mute first alert for 1 hour');
-  // Mute button is now an icon-only button with title attribute (UI redesign)
+  // Two alerts are on the page → two mute buttons match the selector.
+  // page.click() strict mode refuses multiple matches → use .first() explicitly.
   await highlight(page, 'button[title="Mute for 1 hour"]');
-  await page.click('button[title="Mute for 1 hour"]');
+  await page.locator('button[title="Mute for 1 hour"]').first().click();
   await sleep(PAUSE.LONG);
   logOk('Alert muted — status changes to "muted" (yellow)');
   await shot(page, '04_06_alert_muted');

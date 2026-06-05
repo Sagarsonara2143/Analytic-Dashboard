@@ -10,10 +10,8 @@ async function run(page, state) {
   const orgId   = state.ORG_ID;
   const sourceId = state.SOURCE_IDS?.[0];
 
-  if (!sourceId) {
-    logWarn('No source ID found — skipping ingestion scenario. Run 06_data_sources first.');
-    return;
-  }
+  if (!orgId) throw new Error('ORG_ID missing — run scenario 02 first');
+  if (!sourceId) throw new Error('SOURCE_ID missing — run scenario 06 first');
 
   // ── Step 1: Navigate to API docs to show available endpoints ─────────────
   log(S, 1, 'Open API Docs (Swagger UI) to view ingestion endpoints');

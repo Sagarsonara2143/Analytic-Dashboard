@@ -1,19 +1,86 @@
 {
-  "runAt": "2026-06-04T13:15:58.816Z",
-  "user": "demo_1780578945281@example.com",
-  "org": "Demo Analytics Corp",
-  "orgId": null,
-  "dashboardId": null,
-  "totalSeconds": "11.5",
-  "passed": 0,
-  "failed": 1,
+  "runAt": "2026-06-05T13:38:35.753Z",
+  "user": "demo_1780666371262@example.com",
+  "org": "Demo Corp 1780666371262",
+  "orgId": "549d20fc-a935-4c57-a744-1bdc0c8cf74a",
+  "dashboardId": "ae03e14c-b8b9-46a8-90bc-6081404cd0bb",
+  "totalSeconds": "343.3",
+  "passed": 10,
+  "failed": 2,
   "results": [
+    {
+      "id": "01",
+      "label": "Authentication",
+      "status": "PASS",
+      "elapsed": "40.4"
+    },
     {
       "id": "02",
       "label": "Organizations",
+      "status": "PASS",
+      "elapsed": "18.1"
+    },
+    {
+      "id": "03",
+      "label": "Dashboards & Widgets",
       "status": "FAIL",
-      "elapsed": "11.5",
-      "error": "page.waitForURL: Target page, context or browser has been closed\n=========================== logs ===========================\nwaiting for navigation to \"**/dashboards\" until \"load\"\n============================================================"
+      "elapsed": "106.4",
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.group').first().locator('button[title=\"Delete widget\"]')\u001b[22m\n"
+    },
+    {
+      "id": "04",
+      "label": "Alerts",
+      "status": "FAIL",
+      "elapsed": "60.0",
+      "error": "page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[title=\"Mute for 1 hour\"]')\u001b[22m\n"
+    },
+    {
+      "id": "05",
+      "label": "API Keys",
+      "status": "PASS",
+      "elapsed": "16.6"
+    },
+    {
+      "id": "06",
+      "label": "Data Sources",
+      "status": "PASS",
+      "elapsed": "32.8"
+    },
+    {
+      "id": "07",
+      "label": "Data Ingestion",
+      "status": "PASS",
+      "elapsed": "17.3"
+    },
+    {
+      "id": "08",
+      "label": "Reports",
+      "status": "PASS",
+      "elapsed": "15.5"
+    },
+    {
+      "id": "09",
+      "label": "WebSocket Real-Time",
+      "status": "PASS",
+      "elapsed": "14.6"
+    },
+    {
+      "id": "10",
+      "label": "Members & RBAC",
+      "status": "PASS",
+      "elapsed": "3.5"
+    },
+    {
+      "id": "11",
+      "label": "Dashboard Sharing",
+      "status": "PASS",
+      "elapsed": "6.3"
+    },
+    {
+      "id": "12",
+      "label": "Token Refresh",
+      "status": "PASS",
+      "elapsed": "11.6"
     }
   ]
 }

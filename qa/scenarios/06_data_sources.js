@@ -1,7 +1,7 @@
 // scenarios/06_data_sources.js
 // Covers: Create REST source · Create Webhook source · Create CSV source · List · Delete
 
-const { PAUSE, log, logOk, logInfo, sleep, fill, shot, highlight } = require('../helpers');
+const { PAUSE, log, logOk, logInfo, sleep, banner, fill, shot, highlight } = require('../helpers');
 const S = '06_DataSources';
 
 const SOURCES = [
@@ -24,6 +24,7 @@ async function run(page, state) {
     const src = SOURCES[i];
     const stepNum = 2 + i;
     log(S, stepNum, `Create source: "${src.name}" (type: ${src.type})`);
+    await banner(page, S, stepNum, `Creating ${src.type.toUpperCase()} data source: "${src.name}"`);
 
     await fill(page, 'input[placeholder="Source name"]', src.name);
     await page.selectOption('select', src.type);

@@ -1,7 +1,7 @@
 // scenarios/03_dashboards.js
 // Covers: Create dashboard · List dashboards · View dashboard · Add all 5 widget types · Delete widget
 
-const { PAUSE, log, logOk, logInfo, sleep, fill, shot, highlight } = require('../helpers');
+const { PAUSE, log, logOk, logInfo, sleep, banner, fill, shot, highlight } = require('../helpers');
 const S = '03_Dashboards';
 
 const WIDGETS = [
@@ -14,6 +14,7 @@ const WIDGETS = [
 
 async function run(page, state) {
   const orgId = state.ORG_ID;
+  if (!orgId) throw new Error('ORG_ID missing — run scenario 02 first');
 
   // ── Step 1: View dashboards list ──────────────────────────────────────────
   log(S, 1, 'View Dashboards list');
@@ -50,6 +51,7 @@ async function run(page, state) {
     const stepNum = 5 + i;
 
     log(S, stepNum, `Add ${w.type.toUpperCase()} widget: "${w.title}"`);
+    await banner(page, S, stepNum, `Adding ${w.type.toUpperCase()} widget: "${w.title}"`);
     await page.click('button:has-text("Add Widget")');
     await sleep(PAUSE.NORMAL);
     await shot(page, `03_0${stepNum}_widget_form_open`);
@@ -85,8 +87,10 @@ async function run(page, state) {
   await shot(page, '03_11_widget_hover_delete_visible');
 
   // ── Step 12: Delete first widget ─────────────────────────────────────────
-  log(S, 12, 'Click ✕ to delete widget');
-  await firstWidget.locator('button').click();
+  log(S, 12, 'Click delete button to remove widget');
+  // Button has opacity-0 (only visible on CSS group-hover).
+  // force:true bypasses Playwright's visibility check so it clicks despite opacity:0.
+  await firstWidget.locator('button[title="Delete widget"]').click({ force: true });
   await sleep(PAUSE.LONG);
   logOk('Widget deleted — grid updated');
   await shot(page, '03_12_widget_deleted');

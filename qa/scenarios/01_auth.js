@@ -1,7 +1,7 @@
 // scenarios/01_auth.js
 // Covers: Signup · Wrong password error · Duplicate email error · Signin · Signout
 
-const { PAUSE, log, logOk, logWarn, sleep, fill, shot, highlight } = require('../helpers');
+const { PAUSE, log, logOk, logWarn, sleep, banner, fill, shot, highlight } = require('../helpers');
 const S = '01_Auth';
 
 async function run(page, state) {
@@ -9,10 +9,12 @@ async function run(page, state) {
   log(S, 1, 'Navigate to /signup');
   await page.goto(`${state.BASE_URL}/signup`);
   await sleep(PAUSE.NORMAL);
+  await banner(page, S, 1, 'Opening the Signup page');
   await shot(page, '01_01_signup_page');
 
   // ── Step 2: Fill form ─────────────────────────────────────────────────────
   log(S, 2, 'Fill registration form');
+  await banner(page, S, 2, 'Filling registration form — name, email, password');
   await fill(page, 'input[type="text"]', state.USER.full_name);
   await fill(page, 'input[type="email"]', state.USER.email);
   await fill(page, 'input[type="password"]', state.USER.password);
@@ -21,6 +23,7 @@ async function run(page, state) {
 
   // ── Step 3: Submit → redirect /orgs ───────────────────────────────────────
   log(S, 3, 'Submit → expect redirect to /orgs');
+  await banner(page, S, 3, 'Clicking Submit — waiting for redirect to /orgs');
   await page.click('button[type="submit"]');
   await page.waitForURL('**/orgs', { timeout: 12000 });
   logOk('Signup successful — landed on /orgs');
@@ -29,6 +32,7 @@ async function run(page, state) {
 
   // ── Step 4: Sign out ──────────────────────────────────────────────────────
   log(S, 4, 'Sign out via sidebar');
+  await banner(page, S, 4, 'Clicking Sign Out in the sidebar');
   await page.click('button:has-text("Sign Out")');
   await page.waitForURL('**/login', { timeout: 8000 });
   logOk('Signed out → /login');
@@ -36,6 +40,7 @@ async function run(page, state) {
 
   // ── Step 5: Wrong password → error message ────────────────────────────────
   log(S, 5, 'Sign in with WRONG password → expect error');
+  await banner(page, S, 5, 'Testing wrong password — expecting error message');
   await fill(page, 'input[type="email"]', state.USER.email);
   await fill(page, 'input[type="password"]', 'WrongPass!');
   await page.click('button[type="submit"]');
@@ -48,6 +53,7 @@ async function run(page, state) {
   log(S, 6, 'Signup again with SAME email → expect 409 duplicate error');
   await page.goto(`${state.BASE_URL}/signup`);
   await sleep(PAUSE.NORMAL);
+  await banner(page, S, 6, 'Testing duplicate email signup — expecting 409 error');
   await fill(page, 'input[type="text"]', 'Another Person');
   await fill(page, 'input[type="email"]', state.USER.email);
   await fill(page, 'input[type="password"]', 'Password123!');
@@ -61,8 +67,10 @@ async function run(page, state) {
   log(S, 7, 'Sign in with CORRECT credentials');
   await page.goto(`${state.BASE_URL}/login`);
   await sleep(PAUSE.SHORT);
+  await banner(page, S, 7, 'Signing in with correct credentials');
   await fill(page, 'input[type="email"]', state.USER.email);
   await fill(page, 'input[type="password"]', state.USER.password);
+  await highlight(page, 'button[type="submit"]');
   await page.click('button[type="submit"]');
   await page.waitForURL('**/orgs', { timeout: 12000 });
   logOk('Signed in — redirected to /orgs');

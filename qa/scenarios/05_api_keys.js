@@ -1,7 +1,7 @@
 // scenarios/05_api_keys.js
 // Covers: Create API key · List keys · Key preview (ak_...) · Delete key
 
-const { PAUSE, log, logOk, logInfo, logWarn, sleep, fill, shot, highlight } = require('../helpers');
+const { PAUSE, log, logOk, logInfo, logWarn, sleep, banner, fill, shot, highlight } = require('../helpers');
 const S = '05_ApiKeys';
 
 async function run(page, state) {
@@ -11,6 +11,7 @@ async function run(page, state) {
   log(S, 1, 'Navigate to API Keys page');
   await page.goto(`${state.BASE_URL}/orgs/${orgId}/api-keys`);
   await sleep(PAUSE.NORMAL);
+  await banner(page, S, 1, 'API Keys page — no keys yet');
   await shot(page, '05_01_api_keys_empty');
 
   // ── Step 2: Create first API key ─────────────────────────────────────────

@@ -10,10 +10,8 @@ async function run(page, state) {
   const dashboardId = state.DASHBOARD_ID;
   const sourceId    = state.SOURCE_IDS?.[0];
 
-  if (!dashboardId) {
-    logWarn('No dashboard ID — run 03_dashboards first.');
-    return;
-  }
+  if (!orgId) throw new Error('ORG_ID missing — run scenario 02 first');
+  if (!dashboardId) throw new Error('DASHBOARD_ID missing — run scenario 03 first');
 
   // ── Step 1: Open dashboard page (WS auto-connects) ────────────────────────
   log(S, 1, 'Open dashboard — WebSocket connects automatically');

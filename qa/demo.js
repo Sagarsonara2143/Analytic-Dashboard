@@ -77,16 +77,18 @@ function writeBugLog(results) {
 }
 
 // ── Shared state passed between scenarios ─────────────────────────────────────
+const RUN_ID = Date.now();
 const state = {
   BASE_URL: 'http://localhost:3004',
   USER: {
     full_name: 'Demo User',
-    email:     `demo_${Date.now()}@example.com`,
+    email:     `demo_${RUN_ID}@example.com`,
     password:  'Password123!',
   },
   ORG: {
-    name: 'Demo Analytics Corp',
-    slug: 'demo-analytics-corp',
+    // Unique per run — prevents duplicate slug rejection on re-runs
+    name: `Demo Corp ${RUN_ID}`,
+    slug: `demo-corp-${RUN_ID}`,
   },
   ORG_ID:       null,
   DASHBOARD_ID: null,
@@ -157,7 +159,7 @@ async function checkApp() {
 
   const browser = await chromium.launch({
     headless: false,
-    slowMo: 80,
+    slowMo: 600,           // slow enough to follow every action
     args: ['--start-maximized'],
   });
 
@@ -166,6 +168,73 @@ async function checkApp() {
   });
 
   const page = await context.newPage();
+
+  // ── Inject visible cursor + click ripple on every page load ──────────────
+  const CURSOR_SCRIPT = () => {
+    if (document.getElementById('__qa_cursor__')) return;
+
+    // Red cursor dot
+    const dot = document.createElement('div');
+    dot.id = '__qa_cursor__';
+    dot.style.cssText = [
+      'position:fixed', 'top:0', 'left:0', 'z-index:2147483647',
+      'pointer-events:none', 'width:22px', 'height:22px', 'border-radius:50%',
+      'background:rgba(239,68,68,0.9)', 'border:3px solid #fff',
+      'box-shadow:0 0 0 2px rgba(239,68,68,0.6),0 2px 8px rgba(0,0,0,0.4)',
+      'transform:translate(-50%,-50%)', 'transition:width .12s,height .12s',
+    ].join(';');
+    document.body.appendChild(dot);
+
+    // Inject ripple keyframe once
+    if (!document.getElementById('__qa_style__')) {
+      const s = document.createElement('style');
+      s.id = '__qa_style__';
+      s.textContent = `
+        @keyframes __qa_ripple__ {
+          0%   { width:10px; height:10px; opacity:1; }
+          100% { width:70px; height:70px; opacity:0; }
+        }
+        @keyframes __qa_banner__ {
+          0%   { opacity:0; transform:translateX(-50%) translateY(12px); }
+          100% { opacity:1; transform:translateX(-50%) translateY(0); }
+        }
+      `;
+      document.head.appendChild(s);
+    }
+
+    document.addEventListener('mousemove', e => {
+      dot.style.left = e.clientX + 'px';
+      dot.style.top  = e.clientY + 'px';
+    });
+
+    document.addEventListener('mousedown', () => {
+      dot.style.width  = '14px';
+      dot.style.height = '14px';
+      dot.style.background = 'rgba(220,38,38,1)';
+    });
+
+    document.addEventListener('mouseup', () => {
+      dot.style.width  = '22px';
+      dot.style.height = '22px';
+      dot.style.background = 'rgba(239,68,68,0.9)';
+    });
+
+    document.addEventListener('click', e => {
+      const ripple = document.createElement('div');
+      ripple.style.cssText = [
+        'position:fixed', 'z-index:2147483646', 'pointer-events:none',
+        'border-radius:50%', 'border:3px solid rgba(239,68,68,0.8)',
+        `left:${e.clientX}px`, `top:${e.clientY}px`,
+        'transform:translate(-50%,-50%)',
+        'animation:__qa_ripple__ 0.55s ease-out forwards',
+      ].join(';');
+      document.body.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+  };
+
+  // Re-inject cursor after every navigation (SPA navigations clear the DOM)
+  page.on('load', () => { page.evaluate(CURSOR_SCRIPT).catch(() => {}); });
 
   // Track pass/fail per scenario
   const results = [];
