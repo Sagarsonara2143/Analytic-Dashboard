@@ -44,86 +44,117 @@ export default function OrgsPage() {
     create.mutate({ name, slug });
   };
 
-  if (isLoading) return <div className="p-8">Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="p-8 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading your organizations...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-muted p-8">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Your Organizations</h1>
-        <button
-          onClick={() => { setShowForm((v) => !v); setError(""); }}
-          className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:opacity-90"
-        >
-          + New Organization
-        </button>
-      </div>
-
-      {showForm && (
-        <form
-          onSubmit={handleSubmit}
-          className="bg-card border rounded-lg p-6 mb-6 max-w-md space-y-4"
-        >
-          <h2 className="font-semibold">Create Organization</h2>
-          <div className="space-y-1">
-            <label className="text-sm text-muted-foreground">Name</label>
-            <input
-              className="w-full border rounded-md px-3 py-2 text-sm bg-background"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""));
-              }}
-              placeholder="Acme Corp"
-              required
-            />
+    <div className="min-h-screen bg-background p-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Your Organizations</h1>
+            <p className="text-muted-foreground">Manage and access your analytics platforms</p>
           </div>
-          <div className="space-y-1">
-            <label className="text-sm text-muted-foreground">Slug</label>
-            <input
-              className="w-full border rounded-md px-3 py-2 text-sm bg-background"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              placeholder="acme-corp"
-              required
-            />
-          </div>
-          {error && <p className="text-destructive text-sm">{error}</p>}
-          <div className="flex gap-2">
-            <button
-              type="submit"
-              disabled={create.isPending}
-              className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 disabled:opacity-50"
-            >
-              {create.isPending ? "Creating..." : "Create"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowForm(false)}
-              className="px-4 py-2 rounded-md text-sm border hover:bg-muted"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      )}
-
-      {orgs?.length === 0 && !showForm && (
-        <p className="text-muted-foreground text-sm">
-          No organizations yet. Create one to get started.
-        </p>
-      )}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {orgs?.map((org) => (
           <button
-            key={org.id}
-            onClick={() => select(org)}
-            className="bg-card border rounded-lg p-6 text-left hover:border-primary transition-colors"
+            onClick={() => { setShowForm((v) => !v); setError(""); }}
+            className="btn-primary"
           >
-            <p className="font-semibold text-lg">{org.name}</p>
-            <p className="text-muted-foreground text-sm mt-1">{org.slug}</p>
+            + New Organization
           </button>
-        ))}
+        </div>
+
+        {showForm && (
+          <form
+            onSubmit={handleSubmit}
+            className="card-elevated p-6 mb-8 max-w-md space-y-5"
+          >
+            <h2 className="text-lg font-semibold text-foreground">Create Organization</h2>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Organization Name</label>
+              <input
+                className="input-field"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""));
+                }}
+                placeholder="Acme Corporation"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">URL Slug</label>
+              <input
+                className="input-field"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                placeholder="acme-corp"
+                required
+              />
+            </div>
+            {error && (
+              <div className="p-3 bg-destructive/10 border border-destructive/30 rounded-lg">
+                <p className="text-destructive text-sm">{error}</p>
+              </div>
+            )}
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                disabled={create.isPending}
+                className="btn-primary flex-1"
+              >
+                {create.isPending ? "Creating..." : "Create"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="btn-secondary flex-1"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
+
+        {orgs?.length === 0 && !showForm && (
+          <div className="card-elevated p-12 text-center">
+            <p className="text-muted-foreground mb-4">No organizations yet. Create one to get started.</p>
+            <button
+              onClick={() => setShowForm(true)}
+              className="btn-primary"
+            >
+              Create Your First Organization
+            </button>
+          </div>
+        )}
+
+        {orgs && orgs.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {orgs.map((org) => (
+              <button
+                key={org.id}
+                onClick={() => select(org)}
+                className="card-elevated p-6 text-left group hover:shadow-lg transition-all duration-200"
+              >
+                <div className="p-3 rounded-lg bg-primary/10 w-fit mb-4 group-hover:bg-primary/20 transition-colors">
+                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  </svg>
+                </div>
+                <p className="font-semibold text-lg text-foreground">{org.name}</p>
+                <p className="text-muted-foreground text-sm mt-1">{org.slug}</p>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

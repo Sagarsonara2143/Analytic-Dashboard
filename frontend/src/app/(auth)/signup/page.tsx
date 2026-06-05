@@ -40,34 +40,60 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted">
-      <div className="bg-card border rounded-lg p-8 w-full max-w-sm shadow-sm">
-        <h1 className="text-2xl font-bold mb-6">Create Account</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {(["full_name", "email", "password"] as const).map((field) => (
-            <div key={field}>
-              <label className="text-sm font-medium capitalize">{field.replace("_", " ")}</label>
-              <input
-                {...register(field)}
-                type={field === "password" ? "password" : field === "email" ? "email" : "text"}
-                className="mt-1 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              {errors[field] && <p className="text-destructive text-xs mt-1">{errors[field]?.message}</p>}
-            </div>
-          ))}
-          {errors.root && <p className="text-destructive text-sm">{errors.root.message}</p>}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-primary text-primary-foreground rounded-md py-2 text-sm font-medium hover:opacity-90 disabled:opacity-50"
-          >
-            {isSubmitting ? "Creating..." : "Create Account"}
-          </button>
-        </form>
-        <p className="text-sm text-center mt-4 text-muted-foreground">
-          Already have an account?{" "}
-          <Link href="/login" className="text-primary font-medium">Sign in</Link>
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-secondary/30 p-4">
+      <div className="w-full max-w-md">
+        <div className="card-elevated p-8">
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-bold text-foreground mb-2">Create Account</h1>
+            <p className="text-muted-foreground">Join the Analytics Platform today</p>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {(["full_name", "email", "password"] as const).map((field) => (
+              <div key={field}>
+                <label className="block text-sm font-medium text-foreground mb-2 capitalize">
+                  {field.replace("_", " ")}
+                </label>
+                <input
+                  {...register(field)}
+                  type={field === "password" ? "password" : field === "email" ? "email" : "text"}
+                  className="input-field"
+                  placeholder={
+                    field === "full_name"
+                      ? "John Doe"
+                      : field === "email"
+                      ? "you@example.com"
+                      : "••••••••"
+                  }
+                />
+                {errors[field] && <p className="text-destructive text-xs mt-2">{errors[field]?.message}</p>}
+              </div>
+            ))}
+
+            {errors.root && (
+              <div className="p-3 bg-destructive/10 border border-destructive/30 rounded-lg">
+                <p className="text-destructive text-sm">{errors.root.message}</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn-primary w-full"
+            >
+              {isSubmitting ? "Creating Account..." : "Create Account"}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center border-t border-border pt-6">
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link href="/login" className="text-primary font-semibold hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
