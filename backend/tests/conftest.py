@@ -2,6 +2,7 @@ import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy.pool import NullPool
 
 from app.main import app
 from app.db.base import Base
@@ -9,7 +10,10 @@ from app.db.session import get_session
 
 TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/analytics_test"
 
-engine = create_async_engine(TEST_DATABASE_URL, echo=False)
+# NullPool: each operation gets a fresh connection that is disposed immediately.
+# Prevents "another operation is in progress" asyncpg errors when the fixture
+# teardown tries to rollback while the app still holds the connection open.
+engine = create_async_engine(TEST_DATABASE_URL, echo=False, poolclass=NullPool)
 TestSessionLocal = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
 
@@ -26,7 +30,10 @@ async def setup_db():
 async def db():
     async with TestSessionLocal() as session:
         yield session
-        await session.rollback()
+        try:
+            await session.rollback()
+        except Exception:
+            pass
 
 
 @pytest_asyncio.fixture
